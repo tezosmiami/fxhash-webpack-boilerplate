@@ -8,7 +8,7 @@ module.exports = {
     // in the context of generative art
     // https://webpack.js.org/concepts/hot-module-replacement/
     hot: false,
-    port: 8080,
+    port: 8090,
     open: true,
     client: {
       overlay: {
