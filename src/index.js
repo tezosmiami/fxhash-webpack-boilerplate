@@ -121,6 +121,9 @@ let imageSizeSet = null;
 // of the window object.
 // More about it in the guide, section features:
 // [https://fxhash.xyz/articles/guide-mint-generative-token#features]
+
+
+
 window.$fxhashFeatures = {};
 
 // https://stackoverflow.com/a/14731922/953010
@@ -166,12 +169,31 @@ Object.keys(jsondata)
 
     let options = [];
     jsondata[key].forEach(elem => {
+let options=[]
+let branch={}
+
+Object.keys(jsondata)
+  .sort((a, b) => parseInt(a.split('-')[0]) - parseInt(b.split('-')[0]))
+  .forEach(elem => {
+      options.push([elem, parseInt(elem.split('-')[0])]);
+    });
+
+branch = getWeightedOption(options);
+window.$fxhashFeatures[branch.split('-')[1]] = branch.split('-')[2].replaceAll('_', ' ');
+
+if (jsondata['00-background']) jsondata[branch]['00-background'] = jsondata['00-background']['00-background']
+Object.keys(jsondata[branch])
+  .filter(key => jsondata[branch][key].length)
+  .sort((a, b) => parseInt(a.split('-')[0]) - parseInt(b.split('-')[0]))
+  .forEach(key => {
+    toLoad++; // Count each layer (not image) that has yet to be loaded
+    options = [];
+    jsondata[branch][key].forEach(elem => {
       options.push([elem, parseInt(elem.split('-')[0])]);
     });
 
     // Select value for attribute
     let selected = getWeightedOption(options);
-
     const layerOptions = {};
 
     const r = regex.exec(key);
@@ -225,7 +247,11 @@ Object.keys(jsondata)
         fxpreview();
       }
     }, false);
-    selectedLayerImage.src = './layers/' + key + '/' + selected;
+
+    if (key === '00-background') {
+      selectedLayerImage.src = './layers/' + key + '/' + key + '/' + selected;
+    } 
+    else selectedLayerImage.src = './layers/' + branch + '/' + key + '/' + selected;
 
     let layerObj = {
       id: key,

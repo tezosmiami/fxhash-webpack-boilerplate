@@ -5,3 +5,4 @@ yarn.lock
 public/layers/*
 !public/layers/.dummy
 tmp/layers.json
+.DS_Store
