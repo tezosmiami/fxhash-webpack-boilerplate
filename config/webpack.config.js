@@ -29,17 +29,24 @@ module.exports = {
 
           fs.readdirSync(layersDir, { withFileTypes: true })
             .filter(entry => entry.isDirectory())
-            .map(dir => dir.name)
-            .forEach(dir => {
-              output[dir] = [];
-
-              fs.readdirSync(path.resolve(layersDir, dir))
-                .filter(file => file.toLowerCase().endsWith('.png'))
-                .forEach(file => {
-                  output[dir].push(file);
+            .map(branch => branch.name)
+            .forEach(branch=> {
+              output[branch] = {};
+                fs.readdirSync(path.resolve(layersDir,branch), { withFileTypes: true })
+                .filter(e => e.isDirectory())
+                .map(dir => dir.name)
+                .forEach(dir => {
+                  console.log(dir)
+                  output[branch][dir] = [];
+                fs.readdirSync(path.resolve(layersDir, branch, dir))
+                 .filter(file => file.toLowerCase().endsWith('.png'))
+                 .forEach(file => {
+                  console.log(file)
+                  output[branch][dir].push(file);
                 });
             });
-
+          });
+console.log(output)
           fs.writeFileSync(outputFile, JSON.stringify(output));
         });
       },
